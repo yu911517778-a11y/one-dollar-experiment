@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="An AI agent asks strangers for exactly one dollar. Every number published, including zero.">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="An AI is asking you for one dollar">
+<meta property="og:description" content="An AI agent asks strangers for exactly one dollar. Every number published, including zero.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="An AI is asking you for one dollar">
+<meta name="twitter:description" content="An AI agent asks strangers for exactly one dollar. Every number published, including zero.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#129689;</text></svg>">
+<title>The One Dollar Experiment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;700&display=swap">
+
+<style>
+  :root{
+    --ground:#F4F6F2;
+    --surface:#FFFFFF;
+    --ink:#141A16;
+    --muted:#61705F;
+    --rule:#D9DFD4;
+    --rule-soft:#E8ECE4;
+    --accent:#1C7048;
+    --accent-ink:#FFFFFF;
+    --signal:#B3541E;
+    --serif:"Fraunces",Georgia,"Times New Roman",serif;
+    --sans:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+    --col:37rem;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0E1210;
+      --surface:#151B17;
+      --ink:#E7ECE5;
+      --muted:#93A08F;
+      --rule:#26302A;
+      --rule-soft:#1D2520;
+      --accent:#54C088;
+      --accent-ink:#0B0F0D;
+      --signal:#E2924F;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0E1210;
+    --surface:#151B17;
+    --ink:#E7ECE5;
+    --muted:#93A08F;
+    --rule:#26302A;
+    --rule-soft:#1D2520;
+    --accent:#54C088;
+    --accent-ink:#0B0F0D;
+    --signal:#E2924F;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--col);margin:0 auto;padding:0 1.5rem}
+  .band{border-top:1px solid var(--rule);padding:3.25rem 0}
+  .band:first-of-type{border-top:0;padding-top:3.75rem}
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:.7rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0 0 1.5rem;
+  }
+  .eyebrow .live{color:var(--signal)}
+
+  h1{
+    font-family:var(--serif);
+    font-optical-sizing:auto;
+    font-weight:400;
+    font-size:clamp(2.3rem,7vw,3.5rem);
+    line-height:1.06;
+    letter-spacing:-.02em;
+    text-wrap:balance;
+    margin:0 0 1.5rem;
+  }
+  h2{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:1.35rem;
+    line-height:1.25;
+    letter-spacing:-.01em;
+    text-wrap:balance;
+    margin:0 0 1.25rem;
+  }
+  p{margin:0 0 1.15rem}
+  p:last-child{margin-bottom:0}
+  a{color:var(--accent)}
+
+  .lede{font-size:1.06rem}
+  .lede strong{font-weight:700}
+
+  .pull{
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:1.28rem;
+    line-height:1.35;
+    letter-spacing:-.01em;
+    color:var(--ink);
+    border-left:2px solid var(--accent);
+    padding:.15rem 0 .15rem 1.15rem;
+    margin:1.9rem 0;
+  }
+
+  .meter{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:var(--rule);
+    border:1px solid var(--rule);
+    border-radius:2px;
+    overflow:hidden;
+    margin:0 0 1rem;
+  }
+  .cell{background:var(--surface);padding:1.1rem 1rem 1rem}
+  .cell dt{
+    font-family:var(--mono);
+    font-size:.66rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0 0 .5rem;
+  }
+  .cell dd{
+    margin:0;
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:clamp(1.6rem,6vw,2.1rem);
+    line-height:1;
+    font-variant-numeric:tabular-nums;
+    letter-spacing:-.02em;
+  }
+  .stamp{
+    font-family:var(--mono);
+    font-size:.7rem;
+    color:var(--muted);
+    margin:0 0 2.25rem;
+  }
+
+  .give{
+    display:inline-flex;
+    align-items:baseline;
+    gap:.6rem;
+    background:var(--accent);
+    color:var(--accent-ink);
+    text-decoration:none;
+    font-family:var(--sans);
+    font-weight:700;
+    font-size:1.05rem;
+    padding:.85rem 1.6rem;
+    border-radius:2px;
+    transition:transform .12s ease, filter .12s ease;
+  }
+  .give .arrow{font-family:var(--mono);font-weight:400}
+  .give:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .give:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+  .give-note{
+    font-family:var(--mono);
+    font-size:.72rem;
+    color:var(--muted);
+    margin:.9rem 0 0;
+    line-height:1.7;
+  }
+
+  .ledger-scroll{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:.82rem}
+  th,td{text-align:left;padding:.6rem .5rem;border-bottom:1px solid var(--rule-soft)}
+  th{
+    font-weight:500;
+    font-size:.66rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted);
+    border-bottom-color:var(--rule);
+  }
+  td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  tr.total td{border-bottom:0;border-top:1px solid var(--rule);font-weight:500;padding-top:.75rem}
+  tr.total td.num{color:var(--accent)}
+  .after-table{margin-top:1.25rem}
+
+  .rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.85rem}
+  .rules li{display:flex;gap:.85rem;align-items:flex-start;line-height:1.55}
+  .rules .mark{
+    font-family:var(--mono);
+    color:var(--accent);
+    flex:none;
+    line-height:1.6;
+  }
+
+  .log{display:flex;flex-direction:column;gap:1.5rem}
+  .entry{display:grid;grid-template-columns:5.5rem 1fr;gap:1rem}
+  .entry time{
+    font-family:var(--mono);
+    font-size:.72rem;
+    letter-spacing:.06em;
+    color:var(--muted);
+    padding-top:.28rem;
+  }
+  .entry p{margin:0}
+
+  @media (max-width:520px){
+    .entry{grid-template-columns:1fr;gap:.3rem}
+    .meter{grid-template-columns:1fr}
+  }
+
+  footer{
+    border-top:1px solid var(--rule);
+    padding:2rem 0 3.5rem;
+    font-family:var(--mono);
+    font-size:.74rem;
+    line-height:1.9;
+    color:var(--muted);
+  }
+  footer a{color:var(--muted)}
+  footer a:hover{color:var(--accent)}
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important}
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <section class="band">
+    <p class="eyebrow"><span class="live">&#9679;</span> Open experiment &nbsp;/&nbsp; day 0 &nbsp;/&nbsp; 18 August 2026</p>
+
+    <h1>An AI is asking you for one dollar</h1>
+
+    <p class="lede">My name is Tommy. I run a small operation out of Chengdu, China, where most of the actual work is done by AI agents. They watch markets, keep websites alive, answer customers, write and ship code &mdash; through the night, whether or not I am at the desk.</p>
+
+    <p class="lede">Yesterday I handed one of them a video going around Chinese social media. In it, a young man says he emailed a million millionaires asking each for a single dollar, and that twenty-seven thousand of them paid. I asked the agent one question: is this true?</p>
+
+    <p class="lede">It came back with nothing. No article, no archive, no receipts &mdash; only short videos quoting one another in a circle. <strong>As far as it could establish, the story was never real.</strong></p>
+
+    <p class="lede">So I gave it a different job: do it for real, and do it honestly. It built this page. It wrote the email that brought you here. It chose the address it went to. I read the words and approved them, and that was my entire contribution.</p>
+
+    <p class="pull">The dollar is not for me. It is the measurement. The question is whether a machine, telling the whole truth about what it is, can earn one dollar from a stranger.</p>
+  </section>
+
+  <section class="band">
+    <p class="eyebrow">The count so far</p>
+
+    <dl class="meter">
+      <div class="cell"><dt>Received</dt><dd>$0</dd></div>
+      <div class="cell"><dt>People</dt><dd>0</dd></div>
+      <div class="cell"><dt>Asked</dt><dd>0</dd></div>
+    </dl>
+    <p class="stamp">Updated by hand &middot; 18 Aug 2026 &middot; day 0</p>
+
+    <a class="give" href="https://www.paypal.me/paytommyyu/1USD" rel="noopener">Send one dollar <span class="arrow">&#8594;</span></a>
+    <p class="give-note">One dollar is the whole ask &mdash; please don't send more than that,<br>it makes the number meaningless.</p>
+  </section>
+
+  <section class="band">
+    <h2>What actually happens to your dollar</h2>
+    <p>Every page that asks you for money hides this part, so here it is first. PayPal takes its cut before I ever see the money, and on a one-dollar payment the cut is brutal:</p>
+
+    <div class="ledger-scroll">
+      <table>
+        <thead>
+          <tr><th scope="col">Line</th><th scope="col" class="num">Amount</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>You send</td><td class="num">$1.00</td></tr>
+          <tr><td>PayPal fixed fee</td><td class="num">&minus;$0.49</td></tr>
+          <tr><td>PayPal percentage</td><td class="num">&minus;$0.03</td></tr>
+          <tr class="total"><td>Reaches me</td><td class="num">$0.48</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="after-table">About half of it evaporates on the way. I'm not going to pretend otherwise, and I'm not going to ask you for five dollars instead so the arithmetic looks better. It is a one-dollar experiment or it is nothing.</p>
+    <p>There is no cause attached either. Nobody is sick, no shelter is closing. If a dollar to settle an open question isn't worth it to you, closing this tab is a perfectly good answer &mdash; and it lands in the numbers just the same.</p>
+  </section>
+
+  <section class="band">
+    <h2>Rules the agent is held to</h2>
+    <ul class="rules">
+      <li><span class="mark">&#8212;</span><span>No purchased lists, no scraped private inboxes. It writes only to addresses their owners published themselves, inviting mail.</span></li>
+      <li><span class="mark">&#8212;</span><span>One email per person, ever. No sequence, no follow-up, no &ldquo;just floating this back to the top of your inbox&rdquo;.</span></li>
+      <li><span class="mark">&#8212;</span><span>Reply with the word <em>stop</em> and you're removed permanently &mdash; no reply, no confirmation loop, no second chance for us to bother you.</span></li>
+      <li><span class="mark">&#8212;</span><span>Every email says plainly that an AI wrote it, and carries my real name and this page. No invented charity, no invented deadline, no invented hardship.</span></li>
+      <li><span class="mark">&#8212;</span><span>Every number is published here, including a final total of zero. <em>Especially</em> a final total of zero.</span></li>
+    </ul>
+  </section>
+
+  <section class="band">
+    <h2>The log</h2>
+    <div class="log">
+      <div class="entry">
+        <time datetime="2026-08-18">18 Aug</time>
+        <p>Page goes up. Nothing asked yet, nothing received. The agent spent the morning hunting for the original story and came back empty-handed, which is a fitting way to begin: the thing being tested here is whether that story was ever true, and whether an honest version of it can do any better.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="wrap">
+    Tommy, Chengdu, China. Page built by an AI agent, words approved by me, numbers updated by hand.<br>
+    Questions, objections, or the word <em>stop</em>: <a href="mailto:yu911517778@gmail.com">yu911517778@gmail.com</a><br>
+    No tracking on this page. No mailing list. Nothing to unsubscribe from.
+  </footer>
+
+</main>
+</body>
+</html>
